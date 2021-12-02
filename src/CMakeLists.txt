@@ -48,6 +48,7 @@ set(NRF_COMM_SOURCES
     src/radio.c
     src/system.c
     src/temp.c
+    src/gpio.c
 )
 
 set(NRF_TRANSPORT_SOURCES

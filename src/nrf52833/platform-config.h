@@ -212,4 +212,19 @@
 #define NRF_802154_TX_STARTED_NOTIFY_ENABLED 1
 #endif
 
+/*******************************************************************************
+ * @section GPIO (LED and Buttons) configuration.
+ ******************************************************************************/
+
+#define BUTTON_PIN 11 // button #1
+
+#define GPIO_LOGIC_HI 0
+#define GPIO_LOGIC_LOW 1
+
+#define LED_1_PIN 13
+#define LED_2_PIN 14
+#define LED_3_PIN 15
+#define LED_4_PIN 16
+
+
 #endif // PLATFORM_CONFIG_H_

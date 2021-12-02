@@ -80,6 +80,10 @@ set(COMMON_FLAG
     -DCONFIG_GPIO_AS_PINRESET
     -DENABLE_FEM=1
     -DUSE_APP_CONFIG=1
+    # Defined in ./third_party/NordicSemiconductor/nrfx/templates/nRF52840/nrfx_config.h
+    -DGPIOTE_ENABLED=1
+    -DGPIOTE_CONFIG_IRQ_PRIORITY=7
+    -DGPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS=1
 )
 
 set(COMMON_SOURCES
@@ -96,6 +100,7 @@ set(COMMON_SOURCES
     nrfx/drivers/src/nrfx_systick.c
     nrfx/hal/nrf_nvmc.c
     nrfx/soc/nrfx_atomic.c
+    nrfx/drivers/src/nrfx_gpiote.c
 )
 
 set(USB_SOURCES
