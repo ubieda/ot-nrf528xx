@@ -20,7 +20,30 @@
 
 /* Declaring callback function for button 1. */
 static otSysButtonCallback sButtonHandler;
-static bool                sButtonPressed;
+static uint8_t sButtonPressed;
+
+struct userButtons {
+    uint8_t pin;
+    uint8_t number;
+};
+struct userButtons mButtons[] = {
+    {BUTTON_1_PIN, 1},
+    {BUTTON_2_PIN, 2},
+    {BUTTON_3_PIN, 3},
+    {BUTTON_4_PIN, 4},
+};
+
+static int getButtonNumber(uint8_t pin, uint8_t *number)
+{
+    for (size_t i = 0 ; i < NRFX_ARRAY_SIZE(mButtons); i++) {
+        if (pin == mButtons[i].pin) {
+            *number = mButtons[i].number;
+            return 0;
+        }
+    }
+
+    return -1;
+}
 
 /**
  * @brief Function to receive interrupt and call back function
@@ -29,9 +52,9 @@ static bool                sButtonPressed;
  */
 static void in_pin1_handler(uint32_t pin, nrf_gpiote_polarity_t action)
 {
-    OT_UNUSED_VARIABLE(pin);
     OT_UNUSED_VARIABLE(action);
-    sButtonPressed = true;
+
+    (void)getButtonNumber(pin, &sButtonPressed);
 }
 
 /**
@@ -113,21 +136,23 @@ void otSysButtonInit(otSysButtonCallback aCallback)
     nrfx_gpiote_in_config_t in_config = NRFX_GPIOTE_CONFIG_IN_SENSE_LOTOHI(true);
     in_config.pull                    = NRF_GPIO_PIN_PULLUP;
 
-    ret_code_t err_code;
-    err_code = nrfx_gpiote_in_init(BUTTON_PIN, &in_config, in_pin1_handler);
-    APP_ERROR_CHECK(err_code);
+    for (size_t i = 0 ; i < NRFX_ARRAY_SIZE(mButtons); i++) {
+        ret_code_t err_code;
+        err_code = nrfx_gpiote_in_init(mButtons[i].pin, &in_config, in_pin1_handler);
+        APP_ERROR_CHECK(err_code);
+
+        nrfx_gpiote_in_event_enable(mButtons[i].pin, true);
+    }
 
     sButtonHandler = aCallback;
-    sButtonPressed = false;
-
-    nrfx_gpiote_in_event_enable(BUTTON_PIN, true);
+    sButtonPressed = 0;
 }
 
 void otSysButtonProcess(otInstance *aInstance)
 {
     if (sButtonPressed)
     {
-        sButtonPressed = false;
-        sButtonHandler(aInstance);
+        sButtonHandler(aInstance, sButtonPressed);
+        sButtonPressed = 0;
     }
 }

@@ -216,7 +216,10 @@
  * @section GPIO (LED and Buttons) configuration.
  ******************************************************************************/
 
-#define BUTTON_PIN 11 // button #1
+#define BUTTON_1_PIN 11
+#define BUTTON_2_PIN 12
+#define BUTTON_3_PIN 24
+#define BUTTON_4_PIN 25
 
 #define GPIO_LOGIC_HI 0
 #define GPIO_LOGIC_LOW 1
